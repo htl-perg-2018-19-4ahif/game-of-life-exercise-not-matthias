@@ -123,23 +123,21 @@ window.onload = () => {
     }
 
     const nextGeneration = () => {
-        board = board.map((subBoard, x) => subBoard.map((cell, y) => {
+        board = board.map((rows, x) => rows.map((column, y) => {
             let neighbours: number = getNeighbourCount(x, y);
 
-            // neighbours == 3          -> stay alive / gets revived
-            // cell && neighbours == 2  -> must be alive and have 2 neighbours
-            return neighbours == 3 || (cell && neighbours === 2)
+            return neighbours == 3 || (column && neighbours === 2)
         }));
 
     }
-    // setInterval(nextGeneration, 100);
+    setInterval(nextGeneration, 100);
 
 
     const drawBoard = () => {
         renderer.clearScreen();
 
-        board.forEach((subBoard, x) => subBoard.forEach((element, y) => {
-            if (element) renderer.drawPoint(x * scale, y * scale);
+        board.forEach((rows, x) => rows.forEach((colum, y) => {
+            if (colum) renderer.drawPoint(x * scale, y * scale);
         }));
 
         window.requestAnimationFrame(drawBoard);
@@ -151,8 +149,8 @@ window.onload = () => {
     const scale = 4;
     const population = .03;
 
-    // let board = generateBoard(boardSize * scale, population);
-    let board = generateGlider(boardSize * scale);
+    let board = generateBoard(boardSize * scale, population);
+    // let board = generateGlider(boardSize * scale);
 
 
 
