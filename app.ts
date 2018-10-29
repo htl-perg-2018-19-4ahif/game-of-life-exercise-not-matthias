@@ -71,18 +71,18 @@ class Renderer {
 
 window.onload = () => {
     const renderer = new Renderer(800);
-    
-    const generateBoard = () => {
-        return new Array(10).fill(undefined).map(element => new Array(10).fill(1))
+
+    const generateBoard = (boardSize: number, population: number) => {
+        return new Array(boardSize).fill(undefined).map(element => new Array(boardSize).fill(Math.random() < population))
     }
 
-    const generateGlider = () => {
-
+    const generateGlider = (Array: number) => {
+        
     }
 
     const draw = () => {
-        console.log("Hello");
-        renderer.drawPoint(100, 100);
+        board.forEach(element => element.forEach(element2 => console.log(element + " " + element2)));
+
         window.requestAnimationFrame(draw);
     }
 
@@ -90,5 +90,8 @@ window.onload = () => {
 
     window.requestAnimationFrame(draw);
 
+    const boardSize = 800;
+    const population = .3;
+    let board = generateBoard(boardSize, population);
 
 };
