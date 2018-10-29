@@ -39,7 +39,7 @@ class Renderer {
      * @param y the y coordinate
      */
     drawPoint(x: number, y: number) {
-        this.ctx.fillRect(x, y, 10, 10);
+        this.ctx.fillRect(x, y, 4, 4);
     }
 
     /**
@@ -71,14 +71,24 @@ class Renderer {
 
 window.onload = () => {
     const renderer = new Renderer(800);
+    
+    const generateBoard = () => {
+        return new Array(10).fill(undefined).map(element => new Array(10).fill(1))
+    }
+
+    const generateGlider = () => {
+
+    }
+
+    const draw = () => {
+        console.log("Hello");
+        renderer.drawPoint(100, 100);
+        window.requestAnimationFrame(draw);
+    }
+
+
 
     window.requestAnimationFrame(draw);
 
-    // Draw
-    function draw() {
-        console.log("Hello");
-        renderer.drawPoint(100, 100);
 
-        window.requestAnimationFrame(draw);
-    }
 };
