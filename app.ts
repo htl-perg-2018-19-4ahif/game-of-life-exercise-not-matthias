@@ -73,7 +73,7 @@ window.onload = () => {
     const renderer = new Renderer(800);
 
     const generateBoard = (boardSize: number, population: number) => {
-        return new Array(boardSize).fill(undefined).map(element => new Array(boardSize).fill(Math.random() < population))
+        return new Array(boardSize).fill(undefined).map(() => new Array(boardSize).fill(undefined).map(() => Math.random() < population))
     }
 
     const generateGlider = (Array: number) => {
@@ -81,8 +81,6 @@ window.onload = () => {
     }
 
     const draw = () => {
-        board.forEach(element => element.forEach(element2 => console.log(element + " " + element2)));
-
         window.requestAnimationFrame(draw);
     }
 
