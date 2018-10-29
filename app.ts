@@ -99,8 +99,12 @@ window.onload = () => {
             );
     }
 
-    const generateGlider = (board: any[]) => {
+    const generateGlider = (boardSize: number) => {
+        const board = generateBoard(boardSize, 0);
+        
+        // TODO
 
+        return board;
     }
 
     const getNeighbourCount = (x: number, y: number) => {
@@ -119,48 +123,16 @@ window.onload = () => {
     }
 
     const nextGeneration = () => {
-        let newBoard = board;
-
-        board.map((subBoard, x) => subBoard.map((cell, y) => {
+        board = board.map((subBoard, x) => subBoard.map((cell, y) => {
             let neighbours: number = getNeighbourCount(x, y);
 
-            if (cell === STATE.dead) {
-                switch (neighbours) {
-                    case 3:
-                        newBoard[x][y] = STATE.living;
-                        break;
-
-                    default:
-                        newBoard[x][y] = STATE.dead;
-                }
-            } else if (cell === STATE.living) {
-                switch (neighbours) {
-                    case 0:
-                    case 1:
-                        newBoard[x][y] = STATE.dead;    // die of loneliness
-                        break;
-
-                    case 2:
-                    case 3:
-                        newBoard[x][y] = STATE.living;  // carry on living
-                        break;
-
-                    case 4:
-                    case 5:
-                    case 6:
-                    case 7:
-                    case 8:
-                        newBoard[x][y] = STATE.dead;    // die of overcrowding
-
-                    default:
-                        newBoard[x][y] = STATE.dead;
-                }
-            }
+            // neighbours == 3          -> stay alive / gets revived
+            // cell && neighbours == 2  -> must be alive and have 2 neighbours
+            return neighbours == 3 || (cell && neighbours === 2)
         }));
 
-        board = newBoard;
     }
-    setInterval(nextGeneration, 100);
+    // setInterval(nextGeneration, 100);
 
 
     const drawBoard = () => {
@@ -179,5 +151,12 @@ window.onload = () => {
     const scale = 4;
     const population = .03;
 
-    let board = generateBoard(boardSize * scale, population);
+    // let board = generateBoard(boardSize * scale, population);
+    let board = generateGlider(boardSize * scale);
+
+
+
+    document.getElementById('nextGen').onclick = () => {
+        nextGeneration();
+    }
 };
