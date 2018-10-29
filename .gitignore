@@ -78,4 +78,4 @@ typings/
 
 
 # Custom rules
-app.js
+*.js
