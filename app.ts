@@ -1,7 +1,12 @@
 enum Color {
     BLACK,
     WHITE
-}
+};
+
+const STATE = {
+    living: true,
+    dead: false
+};
 
 class Renderer {
     canvasSize: number;
@@ -85,26 +90,94 @@ window.onload = () => {
     const renderer = new Renderer(800);
 
     const generateBoard = (boardSize: number, population: number) => {
-        return new Array(boardSize).fill(undefined).map(() => new Array(boardSize).fill(undefined).map(() => Math.random() < population))
+        return new Array(boardSize)
+            .fill(false)
+            .map(() =>
+                new Array(boardSize)
+                    .fill(false)
+                    .map(() => Math.random() < population)
+            );
     }
 
-    const generateGlider = (Array: number) => {
+    const generateGlider = (board: any[]) => {
 
     }
 
-    const draw = () => {
-        board.forEach((subBoard, x) => subBoard.forEach((element, y) => {
-            if (element) renderer.drawPoint(x * 4, y * 4);
+    const getNeighbourCount = (x: number, y: number) => {
+        let neighbours: number = 0;
+
+        let xChecks = [x - 1, x, x + 1];
+        let yChecks = [y - 1, y, y + 1];
+
+        for (const xCheck of xChecks) {
+            for (const yCheck of yChecks) {
+                neighbours += (!(xCheck == x && yCheck == y) && board[xCheck] && board[xCheck][yCheck]) ? 1 : 0;
+            }
         }
-        ));
 
-        // window.requestAnimationFrame(draw);
+        return neighbours;
     }
 
-    window.requestAnimationFrame(draw);
+    const nextGeneration = () => {
+        let newBoard = board;
 
-    const boardSize = 800;
-    const population = .3;
+        board.map((subBoard, x) => subBoard.map((cell, y) => {
+            let neighbours: number = getNeighbourCount(x, y);
 
-    let board = generateBoard(boardSize, population);
+            if (cell === STATE.dead) {
+                switch (neighbours) {
+                    case 3:
+                        newBoard[x][y] = STATE.living;
+                        break;
+
+                    default:
+                        newBoard[x][y] = STATE.dead;
+                }
+            } else if (cell === STATE.living) {
+                switch (neighbours) {
+                    case 0:
+                    case 1:
+                        newBoard[x][y] = STATE.dead;    // die of loneliness
+                        break;
+
+                    case 2:
+                    case 3:
+                        newBoard[x][y] = STATE.living;  // carry on living
+                        break;
+
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 8:
+                        newBoard[x][y] = STATE.dead;    // die of overcrowding
+
+                    default:
+                        newBoard[x][y] = STATE.dead;
+                }
+            }
+        }));
+
+        board = newBoard;
+    }
+    setInterval(nextGeneration, 100);
+
+
+    const drawBoard = () => {
+        renderer.clearScreen();
+
+        board.forEach((subBoard, x) => subBoard.forEach((element, y) => {
+            if (element) renderer.drawPoint(x * scale, y * scale);
+        }));
+
+        window.requestAnimationFrame(drawBoard);
+    }
+
+    window.requestAnimationFrame(drawBoard);
+
+    const boardSize = 200;
+    const scale = 4;
+    const population = .03;
+
+    let board = generateBoard(boardSize * scale, population);
 };
