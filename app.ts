@@ -1,3 +1,8 @@
+enum Color {
+    BLACK,
+    WHITE
+}
+
 class Renderer {
     canvasSize: number;
     canvas: any;
@@ -15,15 +20,22 @@ class Renderer {
         this.canvas.width = this.canvas.height = canvasSize;
         this.ctx = this.canvas.getContext('2d');
 
-        // Standard color = black
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+        this.setColor(Color.BLACK);
     }
 
     /**
      * Sets the rendering color
      */
-    setColor() {
-        // TODO
+    setColor(color: Color) {
+        switch (color) {
+            case Color.BLACK:
+                this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+                break;
+
+            case Color.WHITE:
+                this.ctx.fillStyle = 'rgba(1, 1, 1, 1)';
+                break;
+        }
     }
 
     /**
@@ -77,19 +89,22 @@ window.onload = () => {
     }
 
     const generateGlider = (Array: number) => {
-        
+
     }
 
     const draw = () => {
-        window.requestAnimationFrame(draw);
+        board.forEach((subBoard, x) => subBoard.forEach((element, y) => {
+            if (element) renderer.drawPoint(x * 4, y * 4);
+        }
+        ));
+
+        // window.requestAnimationFrame(draw);
     }
-
-
 
     window.requestAnimationFrame(draw);
 
     const boardSize = 800;
     const population = .3;
-    let board = generateBoard(boardSize, population);
 
+    let board = generateBoard(boardSize, population);
 };
