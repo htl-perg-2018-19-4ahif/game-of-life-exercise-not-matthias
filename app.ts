@@ -165,7 +165,7 @@ window.onload = () => {
         const offsetY = Math.floor(event.offsetY / scale);
 
         if (canDraw && (offsetX <= boardSize && offsetX >= 0) && (offsetY <= boardSize && offsetY >= 0)) {
-            board[offsetX][offsetY] = true;
+            board[offsetX][offsetY] = !board[offsetX][offsetY];
         }
     }
 
