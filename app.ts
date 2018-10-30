@@ -101,7 +101,7 @@ window.onload = () => {
 
     const generateGlider = (boardSize: number) => {
         const board = generateBoard(boardSize, 0);
-        
+
         // TODO
 
         return board;
@@ -130,7 +130,7 @@ window.onload = () => {
         }));
 
     }
-    setInterval(nextGeneration, 100);
+    // setInterval(nextGeneration, 100);
 
 
     const drawBoard = () => {
@@ -156,5 +156,24 @@ window.onload = () => {
 
     document.getElementById('nextGen').onclick = () => {
         nextGeneration();
+    }
+
+
+    let canDraw: boolean = false;
+    document.getElementById('canvas').onmousemove = (event) => {
+        const offsetX = Math.floor(event.offsetX / scale);
+        const offsetY = Math.floor(event.offsetY / scale);
+
+        if (canDraw && (offsetX <= boardSize && offsetX >= 0) && (offsetY <= boardSize && offsetY >= 0)) {
+            board[offsetX][offsetY] = true;
+        }
+    }
+
+    document.getElementById('canvas').onmouseup = (event) => {
+        canDraw = false;
+    }
+
+    document.getElementById('canvas').onmousedown = (event) => {
+        canDraw = true;
     }
 };
