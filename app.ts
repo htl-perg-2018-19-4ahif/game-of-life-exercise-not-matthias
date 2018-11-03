@@ -1,20 +1,18 @@
 // TODO: optimize algorithms (currently 6-7 FPS)
 // TODO: move renderer to another file (use browserify)
 
-
 /**
  * Enum with the background colors
  */
 enum Color {
     BLACK,
-    WHITE
-};
-
+    WHITE,
+}
 
 class Renderer {
-    canvasSize: number;
-    canvas: any;
-    ctx: any;
+    public canvasSize: number;
+    public canvas: HTMLCanvasElement;
+    public ctx: CanvasRenderingContext2D;
 
     /**
      * Gets a reference to the canvas (id: canvas), sets the size and the color to black
@@ -24,9 +22,9 @@ class Renderer {
         this.canvasSize = canvasSize;
 
         // Get reference to canvas
-        this.canvas = <HTMLCanvasElement>document.getElementById('canvas');
+        this.canvas = document.getElementById("canvas") as HTMLCanvasElement;
         this.canvas.width = this.canvas.height = canvasSize;
-        this.ctx = this.canvas.getContext('2d');
+        this.ctx = this.canvas.getContext("2d");
 
         this.setColor(Color.BLACK);
     }
@@ -34,14 +32,14 @@ class Renderer {
     /**
      * Sets the rendering color
      */
-    setColor(color: Color) {
+    public setColor(color: Color) {
         switch (color) {
             case Color.BLACK:
-                this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+                this.ctx.fillStyle = "rgba(0, 0, 0, 1)";
                 break;
 
             case Color.WHITE:
-                this.ctx.fillStyle = 'rgba(1, 1, 1, 1)';
+                this.ctx.fillStyle = "rgba(1, 1, 1, 1)";
                 break;
         }
     }
@@ -49,7 +47,7 @@ class Renderer {
     /**
      * Clears the entire screen
      */
-    clearScreen() {
+    public clearScreen() {
         this.ctx.clearRect(0, 0, this.canvasSize, this.canvasSize);
     }
 
@@ -58,7 +56,7 @@ class Renderer {
      * @param x the x coordinate
      * @param y the y coordinate
      */
-    drawPoint(x: number, y: number) {
+    public drawPoint(x: number, y: number) {
         this.ctx.fillRect(x, y, 4, 4);
     }
 
@@ -69,7 +67,7 @@ class Renderer {
      * @param lengthX length of the x coordinate
      * @param lengthY length of the y coordinate
      */
-    drawLine(x: number, y: number, lengthX: number, lengthY: number) {
+    public drawLine(x: number, y: number, lengthX: number, lengthY: number) {
         this.ctx.beginPath();
         this.ctx.moveTo(x, y);
         this.ctx.lineTo(x + lengthX, y + lengthY);
@@ -82,7 +80,7 @@ class Renderer {
      * @param y the y coordinate
      * @param text custom text
      */
-    drawText(x: number, y: number, text: string) {
+    public drawText(x: number, y: number, text: string) {
         this.ctx.font = "14px Arial";
         this.ctx.fillText(text, x, y);
     }
@@ -99,17 +97,18 @@ window.onload = () => {
      * @param population the percentage of the beginning cells
      */
     const generateBoard = (boardSize: number, population: number) => {
-        return new Array(boardSize).fill(false).map(() => new Array(boardSize).fill(false).map(() => Math.random() < population));
-    }
+        return new Array(boardSize).fill(false).map(() => new Array(boardSize).fill(false)
+            .map(() => Math.random() < population));
+    };
 
     /**
      * Generates a board with a gosper glider gun
      * @param boardSize the size of the board (in cells)
      */
     const generateGosperGliderGun = (boardSize: number) => {
-        const board = new Array(boardSize).fill(false).map(() => new Array(boardSize).fill(false));
-        const offset = 10;
-        const coords =
+        const board: boolean[][] = new Array(boardSize).fill(false).map(() => new Array(boardSize).fill(false));
+        const offset: number = 10;
+        const coords: any[] =
             [
                 [1, 5], [1, 6], [2, 5], [2, 6], [11, 5],
                 [11, 6], [11, 7], [12, 4], [12, 8], [13, 3],
@@ -117,7 +116,7 @@ window.onload = () => {
                 [16, 8], [17, 5], [17, 6], [17, 7], [18, 6],
                 [21, 3], [21, 4], [21, 5], [22, 3], [22, 4],
                 [22, 5], [23, 2], [23, 6], [25, 1], [25, 2],
-                [25, 6], [25, 7], [35, 3], [35, 4], [36, 3], [36, 4]
+                [25, 6], [25, 7], [35, 3], [35, 4], [36, 3], [36, 4],
             ];
 
         for (const coord of coords) {
@@ -125,7 +124,7 @@ window.onload = () => {
         }
 
         return board;
-    }
+    };
 
     /**
      * Get the neighbour count of a specific cell (specified by the coordinates)
@@ -135,31 +134,30 @@ window.onload = () => {
     const getNeighbourCount = (x: number, y: number) => {
         let neighbours: number = 0;
 
-        let xChecks = [x - 1, x, x + 1];
-        let yChecks = [y - 1, y, y + 1];
+        const xChecks: number[] = [x - 1, x, x + 1];
+        const yChecks: number[] = [y - 1, y, y + 1];
 
         for (const xCheck of xChecks) {
             for (const yCheck of yChecks) {
-                neighbours += (!(xCheck == x && yCheck == y) && board[xCheck] && board[xCheck][yCheck]) ? 1 : 0;
+                neighbours += (!(xCheck === x && yCheck === y) && board[xCheck] && board[xCheck][yCheck]) ? 1 : 0;
             }
         }
 
         return neighbours;
-    }
+    };
 
     /**
      * Generate the next generation (every 100ms)
      */
     const nextGeneration = () => {
         board = board.map((rows, x) => rows.map((column, y) => {
-            let neighbours: number = getNeighbourCount(x, y);
+            const neighbours: number = getNeighbourCount(x, y);
 
-            return neighbours == 3 || (column && neighbours === 2)
+            return neighbours === 3 || (column && neighbours === 2);
         }));
 
-    }
+    };
     setInterval(nextGeneration, 100);
-
 
     /**
      * Draw the entire cell board
@@ -168,53 +166,52 @@ window.onload = () => {
         renderer.clearScreen();
 
         board.forEach((rows, x) => rows.forEach((colum, y) => {
-            if (colum) renderer.drawPoint(x * scale, y * scale);
+            if (colum) { renderer.drawPoint(x * scale, y * scale); }
         }));
 
         window.requestAnimationFrame(drawBoard);
-    }
+    };
     window.requestAnimationFrame(drawBoard);
 
 
-    const renderer = new Renderer(800);
-    const population = .03;
-    const boardSize = 200;
-    const scale = 4;
+    const renderer: Renderer = new Renderer(800);
+    const population: number = .03;
+    const boardSize: number = 200;
+    const scale: number = 4;
 
-    let board = generateBoard(boardSize * scale, population);
-
+    let board: boolean[][] = generateBoard(boardSize * scale, population);
 
 
     /**
      * Onclick handler for the next-generation button
      */
-    document.getElementById('btn-next-generation').onclick = () => {
+    document.getElementById("btn-next-generation").onclick = () => {
         nextGeneration();
-    }
+    };
 
     /**
      * Onclick handler for the generate button
      */
-    document.getElementById('btn-generate').onclick = () => {
+    document.getElementById("btn-generate").onclick = () => {
         board = generateGosperGliderGun(boardSize * scale);
-    }
+    };
 
     /**
      * Onlick handler for the restart button
      */
-    document.getElementById('btn-restart').onclick = () => {
+    document.getElementById("btn-restart").onclick = () => {
         board = generateBoard(boardSize * scale, population);
-    }
-
+    };
 
     // Custom drawing (only for testing purposes)
     let canDraw: boolean = false;
     let mode: boolean = true;
-    document.getElementById('canvas').onmousemove = (event) => {
-        if (event.shiftKey)
+    document.getElementById("canvas").onmousemove = (event: MouseEvent) => {
+        if (event.shiftKey) {
             mode = false;
-        else
+        } else {
             mode = true;
+        }
 
         const offsetX = Math.floor(event.offsetX / scale);
         const offsetY = Math.floor(event.offsetY / scale);
@@ -222,17 +219,17 @@ window.onload = () => {
         if (canDraw && (offsetX <= boardSize && offsetX >= 0) && (offsetY <= boardSize && offsetY >= 0)) {
             board[offsetX][offsetY] = mode;
         }
-    }
+    };
 
-    document.getElementById('canvas').onmousedown = (event) => {
+    document.getElementById("canvas").onmousedown = (event: MouseEvent) => {
         // Left Click
-        if (event.button === 0)
+        if (event.button === 0) {
             canDraw = true;
+        }
 
-    }
+    };
 
-    document.getElementById('canvas').onmouseup = (event) => {
+    document.getElementById("canvas").onmouseup = (event: MouseEvent) => {
         canDraw = false;
-    }
-
+    };
 };
