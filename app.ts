@@ -11,7 +11,7 @@ class Renderer {
     ctx: any;
 
     /**
-     * 
+     * Gets a reference to the canvas (id: canvas), sets the size and the color to black
      * @param canvasSize the size of the canvas
      */
     constructor(canvasSize: number) {
@@ -82,7 +82,9 @@ class Renderer {
     }
 }
 
-
+/**
+ * Fires immediately after the browser loads the object.
+ */
 window.onload = () => {
 
     /**
