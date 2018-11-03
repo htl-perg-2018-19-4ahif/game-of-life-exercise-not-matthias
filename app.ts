@@ -1,10 +1,16 @@
+// TODO: optimize algorithms (currently 4 FPS)
+// TODO: move renderer to another file (use browserify)
+
+
+/**
+ * Enum with the background colors
+ */
 enum Color {
     BLACK,
     WHITE
 };
 
 
-// TODO: move to another file (use browserify)
 class Renderer {
     canvasSize: number;
     canvas: any;
