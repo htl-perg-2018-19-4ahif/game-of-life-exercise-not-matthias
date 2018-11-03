@@ -3,11 +3,8 @@ enum Color {
     WHITE
 };
 
-const STATE = {
-    living: true,
-    dead: false
-};
 
+// TODO: move to another file (use browserify)
 class Renderer {
     canvasSize: number;
     canvas: any;
@@ -89,24 +86,45 @@ class Renderer {
 window.onload = () => {
     const renderer = new Renderer(800);
 
+    /**
+     * Generate a new board of cells
+     * @param boardSize the size of the board (in cells)
+     * @param population the percentage of the beginning cells
+     */
     const generateBoard = (boardSize: number, population: number) => {
-        return new Array(boardSize)
-            .fill(false)
-            .map(() =>
-                new Array(boardSize)
-                    .fill(false)
-                    .map(() => Math.random() < population)
-            );
+        return new Array(boardSize).fill(false).map(() => new Array(boardSize).fill(false).map(() => Math.random() < population));
     }
 
-    const generateGlider = (boardSize: number) => {
-        const board = generateBoard(boardSize, 0);
+    /**
+     * Generates a board with a gosper glider gun
+     * @param boardSize the size of the board (in cells)
+     */
+    const generateGosperGliderGun = (boardSize: number) => {
+        const board = new Array(boardSize).fill(false).map(() => new Array(boardSize).fill(false));
+        const offset = 10;
+        const coords =
+            [
+                [1, 5], [1, 6], [2, 5], [2, 6], [11, 5],
+                [11, 6], [11, 7], [12, 4], [12, 8], [13, 3],
+                [13, 9], [14, 3], [14, 9], [15, 6], [16, 4],
+                [16, 8], [17, 5], [17, 6], [17, 7], [18, 6],
+                [21, 3], [21, 4], [21, 5], [22, 3], [22, 4],
+                [22, 5], [23, 2], [23, 6], [25, 1], [25, 2],
+                [25, 6], [25, 7], [35, 3], [35, 4], [36, 3], [36, 4]
+            ];
 
-        // TODO
+        for (const coord of coords) {
+            board[offset + coord[0]][offset + coord[1]] = true;
+        }
 
         return board;
     }
 
+    /**
+     * Get the neighbour count of a specific cell (specified by the coordinates)
+     * @param x the x coordinate
+     * @param y the y coordinate
+     */
     const getNeighbourCount = (x: number, y: number) => {
         let neighbours: number = 0;
 
@@ -122,6 +140,9 @@ window.onload = () => {
         return neighbours;
     }
 
+    /**
+     * Generate the next generation (every 100ms)
+     */
     const nextGeneration = () => {
         board = board.map((rows, x) => rows.map((column, y) => {
             let neighbours: number = getNeighbourCount(x, y);
@@ -130,9 +151,12 @@ window.onload = () => {
         }));
 
     }
-    // setInterval(nextGeneration, 100);
+    setInterval(nextGeneration, 100);
 
 
+    /**
+     * Draw the entire cell board
+     */
     const drawBoard = () => {
         renderer.clearScreen();
 
@@ -142,38 +166,65 @@ window.onload = () => {
 
         window.requestAnimationFrame(drawBoard);
     }
-
     window.requestAnimationFrame(drawBoard);
 
+
+    const population = .03;
     const boardSize = 200;
     const scale = 4;
-    const population = .03;
 
     let board = generateBoard(boardSize * scale, population);
-    // let board = generateGlider(boardSize * scale);
 
 
 
-    document.getElementById('nextGen').onclick = () => {
+    /**
+     * Onclick handler for the next-generation button
+     */
+    document.getElementById('btn-next-generation').onclick = () => {
         nextGeneration();
     }
 
+    /**
+     * Onclick handler for the generate button
+     */
+    document.getElementById('btn-generate').onclick = () => {
+        board = generateGosperGliderGun(boardSize * scale);
+    }
 
+    /**
+     * Onlick handler for the restart button
+     */
+    document.getElementById('btn-restart').onclick = () => {
+        board = generateBoard(boardSize * scale, population);
+    }
+
+
+    // Custom drawing (only for testing purposes)
     let canDraw: boolean = false;
+    let mode: boolean = true;
     document.getElementById('canvas').onmousemove = (event) => {
+        if (event.shiftKey)
+            mode = false;
+        else
+            mode = true;
+
         const offsetX = Math.floor(event.offsetX / scale);
         const offsetY = Math.floor(event.offsetY / scale);
 
         if (canDraw && (offsetX <= boardSize && offsetX >= 0) && (offsetY <= boardSize && offsetY >= 0)) {
-            board[offsetX][offsetY] = !board[offsetX][offsetY];
+            board[offsetX][offsetY] = mode;
         }
+    }
+
+    document.getElementById('canvas').onmousedown = (event) => {
+        // Left Click
+        if (event.button === 0)
+            canDraw = true;
+
     }
 
     document.getElementById('canvas').onmouseup = (event) => {
         canDraw = false;
     }
 
-    document.getElementById('canvas').onmousedown = (event) => {
-        canDraw = true;
-    }
 };
