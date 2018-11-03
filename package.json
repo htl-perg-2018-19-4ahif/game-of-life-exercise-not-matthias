@@ -1,20 +1,28 @@
 {
-  "name": "9010-game-of-life",
+  "name": "game-of-life-exercise-not-matthias",
   "version": "1.0.0",
-  "description": "TypeScript introduction sample for HTL course mobile computing",
+  "description": "A very simple implementation of `Conway's Game of Life`",
   "main": "app.js",
-  "scripts": {
-    "build": "tsc app.ts",
-    "start": "concurrently \"tsc --watch app.ts\" \"browser-sync start --server --watch --files 'index.html' 'app.js'\""
-  },
-  "author": "Rainer Stropek",
-  "license": "MIT",
+  "dependencies": {},
   "devDependencies": {
+    "@types/node": "^10.12.1",
     "browser-sync": "^2.26.3",
     "concurrently": "^4.0.1",
-    "typescript": "^3.1.3",
-    "@types/node": "^10.12.1"
+    "eslint": "^5.8.0",
+    "typescript": "^3.1.3"
   },
-  "dependencies": {
-  }
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently \"tsc --watch app.ts\" \"browser-sync start --server --watch --files 'index.html' 'app.js'\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/htl-perg-2018-19-4ahif/game-of-life-exercise-not-matthias.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/htl-perg-2018-19-4ahif/game-of-life-exercise-not-matthias/issues"
+  },
+  "homepage": "https://github.com/htl-perg-2018-19-4ahif/game-of-life-exercise-not-matthias#readme"
 }
