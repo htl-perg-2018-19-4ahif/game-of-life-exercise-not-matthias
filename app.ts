@@ -1,4 +1,4 @@
-// TODO: optimize algorithms (currently 4 FPS)
+// TODO: optimize algorithms (currently 6-7 FPS)
 // TODO: move renderer to another file (use browserify)
 
 
