@@ -84,7 +84,6 @@ class Renderer {
 
 
 window.onload = () => {
-    const renderer = new Renderer(800);
 
     /**
      * Generate a new board of cells
@@ -169,6 +168,7 @@ window.onload = () => {
     window.requestAnimationFrame(drawBoard);
 
 
+    const renderer = new Renderer(800);
     const population = .03;
     const boardSize = 200;
     const scale = 4;
