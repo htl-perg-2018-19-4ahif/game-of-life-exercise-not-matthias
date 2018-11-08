@@ -155,7 +155,6 @@ window.onload = () => {
 
             return neighbours === 3 || (column && neighbours === 2);
         }));
-
     };
     setInterval(nextGeneration, 100);
 
