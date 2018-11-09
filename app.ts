@@ -1,15 +1,15 @@
 // TODO: optimize algorithms (currently 6-7 FPS)
-// TODO: move renderer to another file (use browserify)
-
-// Note RS: @browserify - I would rather consider webpack
+// TODO: move renderer to another file (use webpack)
 
 /**
  * Enum with the background colors
  */
 enum Color {
-    BLACK,
-    WHITE,
+    BLACK = 1,
+    WHITE = 0,
 }
+
+const font = "14px Arial";
 
 class Renderer {
     public canvasSize: number;
@@ -35,17 +35,7 @@ class Renderer {
      * Sets the rendering color
      */
     public setColor(color: Color) {
-        // Note RS: The following line would be a shorter option:
-        // this.ctx.fillStyle = `rgba(${color},${color},${color},1)`;
-        switch (color) {
-            case Color.BLACK:
-                this.ctx.fillStyle = "rgba(0, 0, 0, 1)";
-                break;
-
-            case Color.WHITE:
-                this.ctx.fillStyle = "rgba(1, 1, 1, 1)";
-                break;
-        }
+        this.ctx.fillStyle = `rgba(${color}, ${color}, ${color}, 1)`;
     }
 
     /**
@@ -85,9 +75,7 @@ class Renderer {
      * @param text custom text
      */
     public drawText(x: number, y: number, text: string) {
-        // Note RS: Avoid such constants distributed over the code. Use a central
-        //          location with all consts e.g. at the beginning of the file.
-        this.ctx.font = "14px Arial";
+        this.ctx.font = font;
         this.ctx.fillText(text, x, y);
     }
 }
